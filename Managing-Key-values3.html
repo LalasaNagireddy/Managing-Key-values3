@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key-Value Store</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 300px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Key-Value Store:</h1>
+    <label for="keyInput">Key:</label>
+    <input type="text" id="keyInput"><br><br>
+    <label for="valueInput">Value:</label>
+    <input type="text" id="valueInput"><br><br>
+    Enter key, value to add OR existing key to fetch value
+    <p>
+        <button onclick="storeKeyValuePair()">Store</button>
+        <button onclick="printTable()">Print Table</button>
+        <button onclick="clearTable()">Clear Table</button><br><br>
+        <table id="keyValueTable">
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+            </tr>
+        </table>
+
+        <script>
+            let associativeArray = {};
+
+            function storeKeyValuePair() {
+                let key = document.getElementById("keyInput").value.trim();
+                let value = document.getElementById("valueInput").value.trim();
+
+                if (key && value) {
+                    associativeArray[key] = value;
+                    document.getElementById("keyInput").value = "";
+                    document.getElementById("valueInput").value = "";
+                    updateTable();
+                }
+            }
+
+            function updateTable() {
+                let table = document.getElementById("keyValueTable");
+                table.innerHTML = '<tr><th>Key</th><th>Value</th></tr>';
+                for (let key in associativeArray) {
+                    let newRow = table.insertRow();
+                    let newKeyCell = newRow.insertCell();
+                    let newValueCell = newRow.insertCell();
+                    newKeyCell.textContent = key;
+                    newValueCell.textContent = associativeArray[key];
+                }
+            }
+
+            function printTable() {
+                // Create a new window and print the table
+                let printWindow = window.open('', '', 'width=600,height=400');
+                printWindow.document.write('<html><head><title>Print Table</title>');
+                printWindow.document.write('<style>table {border-collapse: collapse;} th, td {border: 1px solid black; padding: 8px;}</style>');
+                printWindow.document.write('</head><body>');
+                printWindow.document.write(document.getElementById("keyValueTable").outerHTML);
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+                printWindow.print();
+            }
+
+            function clearTable() {
+                associativeArray = {};
+                updateTable();
+            }
+
+            document.getElementById("keyInput").addEventListener("input", function() {
+                let key = this.value.trim();
+                let value = associativeArray[key];
+                document.getElementById("valueInput").value = value ? value : "";
+            });
+        </script>
+    </body>
+</html>
